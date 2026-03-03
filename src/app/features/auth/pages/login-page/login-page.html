@@ -1,1 +1,82 @@
-<p>login-page works!</p>
+<div class="h-full flex flex-col py-2 mb-4">
+
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 w-full flex flex-col mb-4">
+
+    <a (click)="goBack()" class="ml-2 cursor-pointer underline text-sm text-gray-950/80 self-start hover:text-gray-500">
+      &lt; Volver
+    </a>
+
+    <div class="bg-gray-800/40 backdrop-blur-sm border border-black/30 rounded-xl shadow-xl
+                px-10 py-14 w-full max-w-md mx-auto mt-10 flex flex-col items-center gap-4">
+
+      <h2 class="text-2xl font-bold text-white drop-shadow mb-2">Iniciar Sesión</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-full flex flex-col gap-4">
+
+
+        <!-- EMAIL -->
+
+        <div class="flex flex-col gap-1">
+          <input
+            type="email"
+            placeholder="Email"
+            formControlName="email"
+            class="w-full px-4 py-3 rounded-md border bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            [class.border-red-400]="checkControl('email', 'required') || checkControl('email', 'email')"
+            [class.border-gray-300]="!(checkControl('email', 'required') || checkControl('email', 'email'))"
+          />
+          @if (checkControl('email', 'required')) {
+            <span class="text-red-900 text-xs">El email es obligatorio</span>
+          }
+          @if (checkControl('email', 'email')) {
+            <span class="text-red-900 text-xs">Introduce un email válido</span>
+          }
+        </div>
+
+
+        <!-- CONTRASEÑA -->
+
+        <div class="flex flex-col gap-1">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            class="w-full px-4 py-3 rounded-md border bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            [class.border-red-400]="checkControl('password', 'required') || checkControl('password', 'minlength')"
+            [class.border-gray-300]="!(checkControl('password', 'required') || checkControl('password', 'minlength'))"
+          />
+          @if (checkControl('password', 'required')) {
+            <span class="text-red-900 text-xs">La contraseña es obligatoria</span>
+          }
+          @if (checkControl('password', 'minlength')) {
+            <span class="text-red-900 text-xs">Mínimo 6 caracteres</span>
+          }
+        </div>
+
+
+        <!-- ERROR GLOBAL (conexión / API) -->
+         
+        @if (errorMessage) {
+          <div class="bg-red-900/20 text-shadow-red-900 text-sm px-4 py-2 rounded-md text-center w-full">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="bg-gray-800 hover:bg-gray-700 active:scale-95 text-white font-semibold
+                 px-10 py-2 rounded-md transition-all duration-150 cursor-pointer self-center mt-2"
+        >
+          Entrar
+        </button>
+
+      </form>
+
+      <p class="text-sm text-white/90 mt-2 text-center">
+        Si aún no tienes cuenta puedes registrarte clicando
+        <a routerLink="/auth/register" class="text-gray-900 hover:underline">aquí</a>
+      </p>
+
+    </div>
+  </div>
+</div>

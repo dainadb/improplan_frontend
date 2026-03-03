@@ -7,7 +7,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authState.hasRole('ROLE_ADMIN')) {
-    return true; //es admin → puede entrar
+    return true; //es admin, puede entrar
   }
 
   return router.createUrlTree(['/home']); //deniega el acceso y redirige al inicio

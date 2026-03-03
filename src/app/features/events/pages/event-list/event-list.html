@@ -1,1 +1,98 @@
-<p>event-list works!</p>
+<section class="px-4 py-8 flex flex-col items-center gap-6">
+
+  <!-- Título -->
+  <h1 class="text-4xl font-bold text-white drop-shadow text-center">
+    {{ pageTitle() }}
+  </h1>
+
+  <!-- Filtro de temáticas-->
+  @if (provinceName()) {
+    <app-theme-filter
+      [selectedTheme]="selectedTheme()"
+      (themeSelected)="onThemeSelected($event)"
+    />
+  }
+
+  <!-- Buscador por nombre -->
+  @if (events().length > 0 || searchName()) {
+    <div class="w-full max-w-4xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl shadow-xl px-6 py-4
+                flex flex-col sm:flex-row sm:items-center gap-3">
+      <p class="text-white font-semibold text-sm sm:text-base whitespace-nowrap">
+        ¿Ya tienes algo en mente?
+      </p>
+      <input
+        type="text"
+        placeholder="Buscar por nombre"
+        [ngModel]="searchName()"
+        (ngModelChange)="searchName.set($event)"
+        class="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-white/5
+               text-white text-sm placeholder-white/30
+               focus:outline-none focus:ring-2 focus:ring-blue-400
+               transition duration-150"
+      />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="w-full max-w-4xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-4 text-sm text-red-400 text-center shadow-xl">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Sin resultados de la BBDD -->
+  @if (!error() && events().length === 0 && provinceName()) {
+    <div class="w-full max-w-4xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-10 text-center shadow-xl">
+      <p class="text-white/50 text-sm">
+        En esta zona aún no tenemos eventos registrados, ¡ayúdanos a darles visibilidad!
+      </p>
+    </div>
+  }
+
+  <!-- Sin resultados del FILTRO en memoria -->
+  @if (!error() && events().length > 0 && filteredEvents().length === 0) {
+    <div class="w-full max-w-4xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-10 text-center shadow-xl">
+      <p class="text-white/50 text-sm">
+        No se encontraron eventos con el nombre "<span class="text-white/70">{{ searchName() }}</span>".
+      </p>
+    </div>
+  }
+
+  <!-- Grid de tarjetas -->
+ <!-- Al filtrar por -->
+  @if (!error() && filteredEvents().length > 0) { 
+    <div class="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
+      @for (event of filteredEvents(); track event.id) {
+        <app-event-card [event]="event" />
+      }
+    </div>
+  }
+
+  <!-- Acciones -->
+  <div class="flex flex-col items-center gap-4 mt-4">
+    <button
+      type="button"
+      (click)="goToMap()"
+      class="bg-gray-800 hover:bg-gray-700 active:scale-95 text-white
+             font-semibold text-sm py-2.5 px-10 rounded-md shadow-xl
+             transition-all duration-150 cursor-pointer
+             focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      Ver mapa
+    </button>
+  </div>
+
+  <!-- Enlace crear evento -->
+  <a
+    routerLink="/events/create"
+    class="text-white/50 hover:text-white/80 underline underline-offset-2 text-sm mt-1
+           transition-colors duration-200"
+  >
+    ¿Quieres dar a conocer un evento?
+  </a>
+
+</section>

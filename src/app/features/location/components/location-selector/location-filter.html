@@ -1,0 +1,84 @@
+<section class="flex justify-center ">
+  <div class="bg-gray-800/40 backdrop-blur-sm border border-black/30 rounded-xl shadow-xl
+              px-10 py-14  max-w-2xl text-center">
+
+    <h2 class="text-2xl font-bold text-white drop-shadow mb-6">¿Qué te queda más cerca?</h2>
+
+    <form [formGroup]="locationForm" (ngSubmit)="onSearch()" novalidate>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-2">
+
+        <!-- COMUNIDAD AUTÓNOMA -->
+        <div class="flex flex-col flex-1 min-w-45 text-left">
+          <label for="communityName" class="text-sm font-medium text-white mb-1">
+            Comunidad Autónoma
+          </label>
+          <select
+            id="communityName"
+            formControlName="communityName"
+            class="px-3 py-2 rounded-md border bg-white text-sm text-gray-700 cursor-pointer
+                   focus:outline-none focus:ring-2 focus:ring-blue-400
+                   disabled:bg-gray-100 disabled:cursor-not-allowed"
+            [class.border-red-400]="checkControl('communityName', 'required')"
+            [class.border-gray-300]="!checkControl('communityName', 'required')">
+
+            <option [ngValue]="null" disabled selected>Selecciona una opción</option>
+
+            @for (community of communities(); track community.id) {
+              <option [value]="community.name">{{ community.name }}</option>
+            }
+
+          </select>
+
+          @if (checkControl('communityName', 'required')) {
+            <span class="text-red-900 text-xs mt-1">La comunidad autónoma es obligatoria</span>
+          }
+        </div>
+
+        <!-- PROVINCIA -->
+        <div class="flex flex-col flex-1 min-w-45 text-left">
+          <label for="provinceName" class="text-sm font-medium text-white mb-1">
+            Provincia
+          </label>
+          <select
+            id="provinceName"
+            formControlName="provinceName"
+            class="px-3 py-2 rounded-md border bg-white text-sm text-gray-700 cursor-pointer
+                   focus:outline-none focus:ring-2 focus:ring-blue-400
+                   disabled:bg-gray-100 disabled:cursor-not-allowed"
+            [class.border-red-400]="checkControl('provinceName', 'required')"
+            [class.border-gray-300]="!checkControl('provinceName', 'required')">
+
+            <option [ngValue]="null" disabled selected>Selecciona una opción</option>
+
+            @for (province of provinces(); track province.id) {
+              <option [value]="province.name">{{ province.name }}</option>
+            }
+
+          </select>
+
+          @if (checkControl('provinceName', 'required')) {
+            <span class="text-red-900 text-xs mt-1">La provincia es obligatoria</span>
+          }
+        </div>
+
+      </div>
+
+      <!-- ERROR GLOBAL (conexión / API) -->
+      @if (errorMessage()) {
+        <p class="text-red-900 text-sm mt-2">{{ errorMessage() }}</p>
+      }
+
+      <!-- BOTÓN BUSCAR -->
+      <div class="mt-6">
+        <button
+          type="submit"
+          class="bg-gray-800 hover:bg-gray-700 active:scale-95 text-white font-semibold
+                 px-10 py-2 rounded-md transition-all duration-150 cursor-pointer">
+          Buscar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</section>

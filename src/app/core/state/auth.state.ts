@@ -14,7 +14,7 @@ import { LoginResponse } from '../../features/auth/models/login-response';
 export class AuthState {
 
   private readonly router = inject(Router);
-  private readonly STORAGE_KEY = 'basicAuth';
+  private readonly STORAGE_KEY = 'currentUser';
 
   // SIGNAL:  Cuando su valor cambia, Angular notifica automáticamente a todos los componentes que lo están usando para que se actualicen.
   
@@ -33,6 +33,7 @@ export class AuthState {
   
   /**
    * Guarda la sesión en localStorage y actualiza la signal.
+   * Esto permite que el estado de autenticación persista y esté disponible para otros componentes de la aplicación.
    * @param user Datos del usuario autenticado
    */
   saveSession(user: LoginResponse): void {
@@ -80,3 +81,4 @@ export class AuthState {
     }
   }
 }
+
