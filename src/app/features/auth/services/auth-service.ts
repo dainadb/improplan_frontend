@@ -24,7 +24,7 @@ export class AuthService {
 
   //CONSTANTES:
   private readonly API_URL = 'http://localhost:8080/api/auth';
-  
+  private readonly BASIC_AUTH_KEY = 'basicAuth';
   /**
    * Inicia sesión con email y contraseña.
    * Delega el guardado de sesión a AuthState.
@@ -32,8 +32,12 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<ApiResponse<LoginResponse>> {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.API_URL}/login`, credentials).pipe(
       tap(response => { // Tap permite ejecutar una acción secundaria (guardar datos, logs,etc) sin alterar el valor de los datos
-        if (response.success && response.data) { // Si la respuesta indica éxito y contiene datos, se guarda la sesión
-          this.authState.saveSession(response.data); //AuthState gestiona el estado
+        if (response.success && response.data) { // Si la respuesta del back es exitosa y contiene datos,  
+          
+          const basicAuthToken = btoa(`${credentials.email}:${credentials.password}`); // primero se genera el token de autenticación en formato Basic (base64 de "email:password") con las credenciales facilitadas y se guarda en localStorage con la clave 'basicAuth'.
+          localStorage.setItem(this.BASIC_AUTH_KEY, basicAuthToken);
+          
+          this.authState.saveSession(response.data); //Luego, se delega a AuthState la gestión del estado del usuario autenticado, pasando los datos recibidos del backend y se guarda en localStorage con la clave 'currentUser' para mantener la sesión activa incluso al recargar la página.
         }
       })
     );
@@ -59,8 +63,5 @@ export class AuthService {
       finalize(() => this.authState.clearSession()) // Con finalize se ejecuta siempre (éxito o error)
     ).subscribe();
   }
-
-  
-
   
 }

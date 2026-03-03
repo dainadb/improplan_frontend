@@ -1,5 +1,4 @@
 import { Directive, inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { AuthService } from '../../features/auth/services/auth-service';
 import { AuthState } from '../../core/state/auth.state';
 
 @Directive({
