@@ -1,0 +1,127 @@
+<section class="w-full max-w-6xl mx-auto px-4 py-8 flex flex-col items-center gap-6">
+
+  <!-- Título -->
+  <h1 class="text-5xl font-bold text-white drop-shadow text-center mt-4 mb-4">
+    {{ pageTitle() }}
+  </h1>
+
+  <!-- Municipio y fecha -->
+  @if (provinceName()) {
+    <div class="relative z-20 w-full max-w-6xl
+                flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+      <!-- Municipio -->
+      <div class="sm:w-72 bg-gray-800/40 backdrop-blur-sm border border-black/30
+                  rounded-xl shadow-xl px-3 py-3">
+        <app-municipality-filter
+          [provinceName]="provinceName()"
+          (municipalitySelected)="onMunicipalitySelected($event)"
+        />
+      </div>
+
+      <!-- Fecha -->
+      <div class="sm:w-48 shrink-0 bg-gray-800/40 backdrop-blur-sm border border-black/30
+                  rounded-xl shadow-xl px-3 py-3">
+        <app-date-filter
+          [eventDate]="eventDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+      </div>
+
+    </div>
+  }
+
+  <!-- Filtro de temáticas -->
+  @if (provinceName()) {
+    <div class="w-full max-w-6xl">
+      <app-theme-filter
+        [selectedTheme]="selectedTheme()"
+        (themeSelected)="onThemeSelected($event)"
+      />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="w-full max-w-6xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-4 text-sm text-red-400 text-center shadow-xl">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Sin resultados de la BBDD -->
+  @if (!error() && events().length === 0 && provinceName()) {
+    <div class="w-full max-w-6xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-10 text-center shadow-xl">
+      <p class="text-white/50 text-sm">
+        Aún no tenemos eventos registrados con estas características, ¡ayúdanos a darles visibilidad!
+      </p>
+    </div>
+  }
+
+  <!-- Sin resultados del FILTRO en memoria -->
+  @if (!error() && events().length > 0 && filteredEvents().length === 0) {
+    <div class="w-full max-w-6xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl px-6 py-10 text-center shadow-xl">
+      <p class="text-white/50 text-sm">
+        No se encontraron eventos con el nombre
+        "<span class="text-white/70">{{ searchName() }}</span>".
+      </p>
+    </div>
+  }
+
+  <!-- Mapa -->
+  @if (!error() && provinceName()) {
+    <div class="w-full max-w-6xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl shadow-xl overflow-hidden">
+      <div
+        id="event-map-container"
+        class="w-full h-[480px] sm:h-[560px] z-10">
+      </div>
+    </div>
+  }
+
+  <!-- Buscador por nombre (debajo del mapa) -->
+  @if (events().length > 0 || searchName()) {
+    <div class="w-full max-w-6xl bg-gray-800/40 backdrop-blur-sm border border-black/30
+                rounded-xl shadow-xl px-3 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+      <p class="text-white font-semibold text-sm sm:text-base whitespace-nowrap">
+        ¿Ya tienes algo en mente?
+      </p>
+      <input
+        type="text"
+        placeholder="Buscar por nombre"
+        [ngModel]="searchName()"
+        (ngModelChange)="onSearchNameChange($event)"
+        class="flex-1 px-3 py-2 rounded-md border border-gray-600 bg-white/5
+               text-white text-sm placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400
+               transition duration-150"
+      />
+    </div>
+  }
+
+  <!-- Acciones -->
+  <div class="flex flex-col items-center gap-4 mt-4">
+    <button
+      type="button"
+      (click)="goToList()"
+      class="bg-gray-800 hover:bg-gray-700 active:scale-95 text-white
+             font-semibold text-sm py-2.5 px-10 rounded-md shadow-xl
+             transition-all duration-150 cursor-pointer
+             focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      Ver lista
+    </button>
+  </div>
+
+  <!-- Enlace crear evento -->
+  <button
+    type="button"
+    (click)="goToCreate()"
+    class="text-white/70 hover:text-white/80 underline underline-offset-2 text-sm mt-1
+          transition-colors duration-200 cursor-pointer bg-transparent border-none"
+  >
+    ¿Quieres dar a conocer un evento?
+  </button>
+
+</section>

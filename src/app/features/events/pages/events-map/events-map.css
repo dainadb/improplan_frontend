@@ -1,0 +1,14 @@
+/* Marcador */
+.event-map-marker {
+  color: #3b82f6;
+  filter: drop-shadow(0 2px 4px rgba(111, 184, 174, 0.651));
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.event-map-marker:hover {
+  transform: scale(1.2);
+  color: #60a5fa;
+}
+
+/* Aspecto Popup  gestionado en styles.css*/

@@ -26,9 +26,10 @@ export class LocationFilterComponent implements OnInit {
   private readonly locationService = inject(LocationService);
   private readonly router          = inject(Router);
 
-  
+  // Listas de comunidades autónomas y provincias para los selects
   readonly communities = signal<CommunityResponse[]>([]);
   readonly provinces   = signal<ProvinceResponse[]>([]);
+  // Mensaje de error en caso de fallo al cargar comunidades o provincias
   readonly errorMessage = signal<string | null>(null);
 
   
@@ -52,7 +53,7 @@ export class LocationFilterComponent implements OnInit {
   
 
   /**
-   * Carga todas las comunidades autónomas al inicializar el componente.
+   * Carga todas las comunidades autónomas.
    */
   private loadCommunities(): void {
     this.errorMessage.set(null);
@@ -80,6 +81,7 @@ export class LocationFilterComponent implements OnInit {
   private onCommunityChange(communityName: string | null): void {
     // Resetear provincia y deshabilitar su control
     this.provinces.set([]);
+    
     const provinceControl = this.locationForm.get('provinceName')!;
     provinceControl.reset(null);
     provinceControl.disable();
@@ -140,8 +142,6 @@ export class LocationFilterComponent implements OnInit {
     return this.locationForm.get(formControlName)?.hasError(validador)
         && this.locationForm.get(formControlName)?.touched;
   }
-
-  
 
   
 }

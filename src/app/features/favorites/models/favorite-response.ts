@@ -8,6 +8,8 @@ export interface FavoriteResponse {
     eventId: number;
     eventName: string;
     eventImage: string;
+    eventSummary: string;
+    eventDescription: string;
     eventPrice: number;
     eventThemeName: string;
     eventMunicipalityName: string;

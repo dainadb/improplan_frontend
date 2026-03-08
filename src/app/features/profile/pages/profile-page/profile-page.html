@@ -1,1 +1,92 @@
-<p>profile-page works!</p>
+<section class="w-full max-w-6xl mx-auto px-4 py-8 flex flex-col gap-6">
+
+  <!-- Botón Volver -->
+  <div>
+    <button
+      type="button"
+      (click)="goBack()"
+      class="flex items-center gap-2 text-slate-500 hover:text-teal-400
+             transition-colors duration-200 text-sm font-medium group"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Volver
+    </button>
+  </div>
+
+  @if (user()) {
+    <div class="w-full max-w-xl mx-auto bg-gray-700/50 backdrop-blur-sm border border-white/10
+                rounded-2xl shadow-xl px-8 py-10 flex flex-col gap-8">
+
+      <!-- Cabecera: avatar + nombre centrados -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="h-16 w-16 rounded-full bg-teal-500/30 border-2 border-teal-400
+                    flex items-center justify-center shrink-0">
+          <span class="text-2xl font-bold text-teal-300">
+            {{ user()!.name.charAt(0).toUpperCase() }}
+          </span>
+        </div>
+        <div class="text-center">
+          <h1 class="text-xl font-extrabold text-white tracking-tight">
+            {{ user()!.name }} {{ user()!.surnames }}
+          </h1>
+          <p class="text-sm text-white/40 mt-0.5">Tu información personal</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="h-px bg-white/10"></div>
+
+      <!-- Datos personales: filas con fondo blanco/claro -->
+      <div class="flex flex-col gap-3">
+
+        <!-- Nombre -->
+        <div class="flex flex-col gap-1 bg-white/10 rounded-xl px-4 py-3
+                    border border-white/5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-teal-400/80">
+            Nombre
+          </span>
+          <span class="text-sm text-white font-medium">{{ user()!.name }}</span>
+        </div>
+
+        <!-- Apellidos -->
+        <div class="flex flex-col gap-1 bg-white/10 rounded-xl px-4 py-3
+                    border border-white/5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-teal-400/80">
+            Apellidos
+          </span>
+          <span class="text-sm text-white font-medium">{{ user()!.surnames }}</span>
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-1 bg-white/10 rounded-xl px-4 py-3
+                    border border-white/5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-teal-400/80">
+            Email
+          </span>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-white font-medium">{{ user()!.email }}</span>
+            
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Botón editar -->
+      <button
+        type="button"
+        (click)="goToEdit()"
+        class="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95
+               text-white font-semibold text-sm transition-all duration-150 cursor-pointer
+               focus:outline-none focus:ring-2 focus:ring-teal-400 shadow-lg shadow-teal-900/30"
+      >
+        Modificar datos
+      </button>
+
+    </div>
+  }
+
+</section>

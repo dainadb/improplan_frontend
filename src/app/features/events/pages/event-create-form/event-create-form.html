@@ -1,1 +1,467 @@
-<p>event-create-form works!</p>
+<section class="w-full max-w-6xl mx-auto px-4 py-8 flex flex-col gap-6">
+
+  <!-- Botón Volver -->
+  <div>
+    <button type="button" (click)="goBack()"
+            class="flex items-center gap-2 text-slate-500 hover:text-teal-400
+                   transition-colors duration-200 text-sm font-medium group">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Volver
+    </button>
+  </div>
+
+  <!-- Título -->
+  <h1 class="text-4xl font-bold text-white drop-shadow text-center">Haz que se sepa</h1>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" novalidate
+        class="w-full max-w-2xl mx-auto flex flex-col gap-10">
+
+    <!-- ══════════════════════════════════════════
+         SECCIÓN 1 — INFORMACIÓN BÁSICA
+    ══════════════════════════════════════════ -->
+    <div class="bg-gray-800/40 backdrop-blur-sm border border-white/10
+                rounded-2xl shadow-xl px-6 py-8 flex flex-col gap-5">
+
+      <h2 class="text-sm font-bold uppercase tracking-widest text-teal-400 text-center">
+        Información básica
+      </h2>
+
+      <!-- Nombre -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Nombre del evento</label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Nombre del evento"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150"
+          [ngClass]="{
+            'border-red-500/60': checkControl('name', 'required') || checkControl('name', 'minlength') || checkControl('name', 'maxlength'),
+            'border-white/10':   !(checkControl('name', 'required') || checkControl('name', 'minlength') || checkControl('name', 'maxlength'))
+          }"
+        />
+        @if (checkControl('name', 'required')) {
+          <span class="text-xs text-red-400">El nombre del evento es obligatorio.</span>
+        }
+        @if (checkControl('name', 'minlength')) {
+          <span class="text-xs text-red-400">El nombre debe tener al menos 3 caracteres.</span>
+        }
+        @if (checkControl('name', 'maxlength')) {
+          <span class="text-xs text-red-400">El nombre no puede superar los 150 caracteres.</span>
+        }
+      </div>
+
+      <!-- Foto (URL) -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">
+          Foto del evento <span class="text-white/30 font-normal">(URL)</span>
+        </label>
+        <input
+          type="url"
+          formControlName="image"
+          placeholder="https://ejemplo.com/imagen.jpg"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white
+                 text-sm placeholder-white/20 focus:outline-none focus:ring-2
+                 focus:ring-teal-500 transition duration-150"
+        />
+        
+      </div>
+
+      <!-- Temática -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Temática</label>
+        <select
+          formControlName="themeName"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-150
+                 cursor-pointer"
+          [ngClass]="{
+            'border-red-500/60': checkControl('themeName', 'required'),
+            'border-white/10':   !checkControl('themeName', 'required')
+          }"
+        >
+          <option value="" disabled class="bg-gray-900">Selecciona una temática</option>
+          @for (theme of themes(); track theme.id) {
+            <option [value]="theme.name" class="bg-gray-900">{{ theme.name }}</option>
+          }
+        </select>
+        @if (checkControl('themeName', 'required')) {
+          <span class="text-xs text-red-400">La temática es obligatoria.</span>
+        }
+      </div>
+
+      <!-- Página web informativa -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">
+          Página web informativa
+        </label>
+        <input
+          type="url"
+          formControlName="infoUrl"
+          placeholder="Página web donde está la información completa del evento"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white
+                 text-sm placeholder-white/20 focus:outline-none focus:ring-2
+                 focus:ring-teal-500 transition duration-150"
+        />
+        @if (checkControl('infoUrl', 'required')) {
+          <span class="text-xs text-red-400">La URL del evento es obligatoria.</span>
+        }
+        @if (checkControl('infoUrl', 'pattern')) {
+          <span class="text-xs text-red-400">La URL no tiene un formato válido.</span>
+        }
+      </div>
+
+      <!-- Resumen -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">
+          Qué te vas a encontrar
+          <span class="text-white/30 font-normal">(resumen breve)</span>
+        </label>
+        <input
+          type="text"
+          formControlName="summary"
+          placeholder="Una frase que despierte la curiosidad"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150"
+          [ngClass]="{
+            'border-red-500/60': checkControl('summary', 'required') || checkControl('summary', 'minlength'),
+            'border-white/10':   !(checkControl('summary', 'required') || checkControl('summary', 'minlength'))
+          }"
+        />
+        @if (checkControl('summary', 'required')) {
+          <span class="text-xs text-red-400">El resumen es obligatorio.</span>
+        }
+        @if (checkControl('summary', 'minlength')) {
+          <span class="text-xs text-red-400">El resumen debe tener al menos 10 caracteres.</span>
+        }
+      </div>
+
+      <!-- Descripción -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Descripción</label>
+        <textarea
+          formControlName="description"
+          rows="5"
+          placeholder="Explica en qué consiste el evento. Breve explicación"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150 resize-none"
+          [ngClass]="{
+            'border-red-500/60': checkControl('description', 'required') || checkControl('description', 'minlength'),
+            'border-white/10':   !(checkControl('description', 'required') || checkControl('description', 'minlength'))
+          }"
+        ></textarea>
+        @if (checkControl('description', 'required')) {
+          <span class="text-xs text-red-400">La descripción es obligatoria.</span>
+        }
+        @if (checkControl('description', 'minlength')) {
+          <span class="text-xs text-red-400">La descripción debe tener al menos 20 caracteres.</span>
+        }
+      </div>
+
+      <!-- Entrada gratuita -->
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-6">
+          <span class="text-sm font-semibold text-white/80">Entrada gratuita</span>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" formControlName="isFree" [value]="true"
+                   class="accent-teal-400 cursor-pointer" />
+            <span class="text-sm text-white/70">Sí</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" formControlName="isFree" [value]="false"
+                   class="accent-teal-400 cursor-pointer" />
+            <span class="text-sm text-white/70">No</span>
+          </label>
+        </div>
+
+        <!-- Precio (solo si no es gratuito) -->
+        @if (!eventForm.get('isFree')?.value) {
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-semibold text-white/80">Precio de entrada (€)</label>
+            <input
+              type="number"
+              formControlName="price"
+              min="0.01"
+              step="0.01"
+              placeholder="0.00"
+              class="w-40 px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                     placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                     transition duration-150"
+              [ngClass]="{
+                'border-red-500/60': checkControl('price', 'required') || checkControl('price', 'min'),
+                'border-white/10':   !(checkControl('price', 'required') || checkControl('price', 'min'))
+              }"
+            />
+            @if (checkControl('price', 'required')) {
+              <span class="text-xs text-red-400">El precio es obligatorio.</span>
+            }
+            @if (checkControl('price', 'min')) {
+              <span class="text-xs text-red-400">El precio debe ser mayor que 0.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- ── FECHAS ── -->
+      <div class="flex flex-col gap-3">
+
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-semibold text-white/80">
+            Fechas
+            <span class="text-white/30 font-normal">(puedes añadir varias)</span>
+          </label>
+          <button
+            type="button"
+            (click)="addDate()"
+            class="flex items-center gap-1 text-xs text-teal-400 hover:text-teal-300
+                   transition-colors duration-150"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            Añadir fecha
+          </button>
+        </div>
+
+        @for (date of eventDates; track $index) {
+          <div class="flex items-center gap-2">
+            <input
+              type="date"
+              [name]="'eventDate_' + $index"
+              [value]="date"
+              [min]="tomorrow"
+              (change)="onDateChange($index, $any($event.target).value)"
+              class="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                     focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-150
+                     cursor-pointer [color-scheme:dark]"
+              [ngClass]="{
+                'border-red-500/60': datesError && !date,
+                'border-white/10':   !(datesError && !date)
+              }"
+            />
+            <button
+              type="button"
+              (click)="removeDate($index)"
+              [disabled]="eventDates.length === 1"
+              class="p-1.5 rounded-lg transition-colors duration-150 shrink-0"
+              [ngClass]="{
+                'text-red-400/70 hover:text-red-400 hover:bg-red-400/10': eventDates.length > 1,
+                'text-white/10 cursor-not-allowed':                        eventDates.length === 1
+              }"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        }
+
+        @if (datesError) {
+          <span class="text-xs text-red-400">{{ datesError }}</span>
+        }
+
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECCIÓN 2 — DÓNDE SE CELEBRA
+    ══════════════════════════════════════════ -->
+    <div class="bg-gray-800/40 backdrop-blur-sm border border-white/10
+                rounded-2xl shadow-xl px-6 py-8 flex flex-col gap-5">
+
+      <h2 class="text-sm font-bold uppercase tracking-widest text-teal-400 text-center">
+        ¿Dónde se celebra?
+      </h2>
+
+      <!-- Comunidad Autónoma -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Comunidad Autónoma</label>
+        <select
+          formControlName="communityName"
+          (change)="onCommunityChange($any($event.target).value)"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white
+                 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500
+                 cursor-pointer transition duration-150"
+        >
+          <option value="" disabled class="bg-gray-900">Comunidad Autónoma</option>
+          @for (c of communities(); track c.id) {
+            <option [value]="c.name" class="bg-gray-900">{{ c.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Provincia -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Provincia</label>
+        <select
+          formControlName="provinceName"
+          (change)="onProvinceChange($any($event.target).value)"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white
+                 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150"
+          [ngClass]="{
+            'opacity-40 cursor-not-allowed': provincesDisabled,
+            'cursor-pointer':               !provincesDisabled
+          }"
+        >
+          <option value="" disabled class="bg-gray-900">Provincia</option>
+          @for (p of provinces(); track p.id) {
+            <option [value]="p.name" class="bg-gray-900">{{ p.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Municipio -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Municipio</label>
+        <select
+          formControlName="municipalityName"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-150"
+          [ngClass]="{
+            'border-red-500/60': checkControl('municipalityName', 'required'),
+            'border-white/10':   !checkControl('municipalityName', 'required'),
+            'opacity-40 cursor-not-allowed': municipalitiesDisabled,
+            'cursor-pointer':               !municipalitiesDisabled
+          }"
+        >
+          <option value="" disabled class="bg-gray-900">Municipio</option>
+          @for (m of municipalities(); track m.id) {
+            <option [value]="m.name" class="bg-gray-900">{{ m.name }}</option>
+          }
+        </select>
+        @if (checkControl('municipalityName', 'required')) {
+          <span class="text-xs text-red-400">El municipio es obligatorio.</span>
+        }
+      </div>
+
+      <!-- Dirección -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Dirección</label>
+        <input
+          type="text"
+          formControlName="address"
+          placeholder="Calle y número"
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150"
+          [ngClass]="{
+            'border-red-500/60': checkControl('address', 'required') || checkControl('address', 'minlength'),
+            'border-white/10':   !(checkControl('address', 'required') || checkControl('address', 'minlength'))
+          }"
+        />
+        @if (checkControl('address', 'required')) {
+          <span class="text-xs text-red-400">La dirección es obligatoria.</span>
+        }
+        @if (checkControl('address', 'minlength')) {
+          <span class="text-xs text-red-400">La dirección debe tener al menos 5 caracteres.</span>
+        }
+      </div>
+
+      <!-- Lugar -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-semibold text-white/80">Lugar</label>
+        <input
+          type="text"
+          formControlName="placeName"
+          placeholder="Centro, pabellón, establecimiento, plaza..."
+          class="w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white text-sm
+                 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-teal-500
+                 transition duration-150"
+          [ngClass]="{
+            'border-red-500/60': checkControl('placeName', 'required') || checkControl('placeName', 'minlength'),
+            'border-white/10':   !(checkControl('placeName', 'required') || checkControl('placeName', 'minlength'))
+          }"
+        />
+        @if (checkControl('placeName', 'required')) {
+          <span class="text-xs text-red-400">El lugar es obligatorio.</span>
+        }
+        @if (checkControl('placeName', 'minlength')) {
+          <span class="text-xs text-red-400">El lugar debe tener al menos 3 caracteres.</span>
+        }
+      </div>
+
+    </div>
+
+    <!-- Feedback éxito -->
+    @if (successMessage()) {
+      <div class="flex items-center gap-2 px-4 py-3 rounded-xl
+                  bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- Feedback error -->
+    @if (errorMessage()) {
+      <div class="flex items-center gap-2 px-4 py-3 rounded-xl
+                  bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94
+                   a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Botones de acción -->
+    <div class="flex gap-3 justify-center pb-4">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-8 py-2.5 rounded-xl bg-gray-700/60 hover:bg-gray-700 text-white/70
+               hover:text-white font-semibold text-sm transition-all duration-150
+               focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        [disabled]="isSaving()"
+        class="px-8 py-2.5 rounded-xl font-semibold text-sm transition-all duration-150
+               focus:outline-none focus:ring-2 focus:ring-teal-400"
+        [ngClass]="{
+          'bg-teal-600 hover:bg-teal-500 active:scale-95 text-white cursor-pointer': !isSaving(),
+          'bg-gray-700/50 text-white/20 cursor-not-allowed':                          isSaving()
+        }"
+      >
+        @if (isSaving()) {
+          <span class="flex items-center gap-2">
+            <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                 fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10"
+                      stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+            </svg>
+            Enviando...
+          </span>
+        } @else {
+          Enviar
+        }
+      </button>
+    </div>
+
+    <!-- Pie -->
+    <p class="text-center text-sm text-white/30 pb-2">
+      Entre todos haremos crecer esta comunidad
+    </p>
+
+  </form>
+
+</section>

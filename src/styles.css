@@ -12,3 +12,48 @@
 
 }
 
+/* LEAFLET EVENT MAP POPUP: comandos necesarios para sobreescribir estilos por defecto de leaflet */
+
+/* Elimina la caja blanca envolvente */
+.event-map-popup .leaflet-popup-content-wrapper {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  width: fit-content !important;
+}
+
+/* Elimina el triángulo/tip */
+.event-map-popup .leaflet-popup-tip-container {
+  display: none !important;
+}
+
+/* Elimina márgenes internos del contenido */
+.event-map-popup .leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  line-height: normal;
+}
+
+/* Elimina botón de cerrar nativo de Leaflet */
+.event-map-popup .leaflet-popup-close-button {
+  display: none !important;
+}
+
+/*  LEAFLET MARCADORES */
+
+/* Para que se aprecien los estilos se tienen que colocar en styles.css ya que el divIcon vive fuera del árbol Angular */
+.event-map-marker {
+  color: #397579;
+  filter: drop-shadow(0 2px 4px rgba(141, 231, 235, 0.651));
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.event-map-marker:hover {
+  transform: scale(1.2);
+  color: #50cec380;
+}
