@@ -5,6 +5,7 @@ import { LocationFilterComponent } from "../../../features/location/components/l
   selector: 'app-home-page',
   imports: [LocationFilterComponent],
   templateUrl: './home-page.html',
+  host: { class: 'w-full flex flex-1' },
   styleUrl: './home-page.css',
  
 })

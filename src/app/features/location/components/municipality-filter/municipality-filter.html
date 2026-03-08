@@ -1,0 +1,65 @@
+<div class="relative w-full">
+
+  <!-- Input con icono lupa y botón limpiar -->
+  <div class="flex items-center gap-2 px-3 py-2 rounded-md border border-gray-600
+              bg-white/5 focus-within:ring-2 focus-within:ring-blue-400
+              transition duration-150">
+
+    <!-- Icono lupa -->
+    
+
+    <input
+      type="text"
+      placeholder="Buscar municipio..."
+      [ngModel]="searchText()"
+      (ngModelChange)="searchText.set($event); onSearchInput()"
+      (focus)="dropdownOpen.set(true)"
+      (blur)="onBlur()"
+      class="flex-1 bg-transparent text-white text-sm placeholder-white/30
+             focus:outline-none min-w-0"
+    />
+
+    <!-- Botón limpiar -->
+    @if (searchText()) {
+      <button
+        type="button"
+        (mousedown)="$event.preventDefault(); clearMunicipality()"
+        class="text-white/40 hover:text-white/80 transition-colors shrink-0 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+             stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Desplegable de sugerencias -->
+  @if (dropdownOpen() && filteredMunicipalities().length > 0) {
+    <ul class="absolute z-50 top-full left-0 right-0 mt-1
+               bg-gray-900 border border-black/30 rounded-lg shadow-xl
+               max-h-52 overflow-y-auto">
+      @for (municipality of filteredMunicipalities(); track municipality.id) {
+        <li>
+          <button
+            type="button"
+            (mousedown)="$event.preventDefault(); selectMunicipality(municipality)"
+            class="w-full text-left px-4 py-2.5 text-sm text-white/70
+                   hover:bg-blue-500/30 hover:text-white
+                   transition-colors duration-100 cursor-pointer">
+            {{ municipality.name }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Sin resultados -->
+  @if (dropdownOpen() && searchText() && filteredMunicipalities().length === 0) {
+    <div class="absolute z-50 top-full left-0 right-0 mt-1
+                bg-gray-900 border border-black/30 rounded-lg shadow-xl
+                px-4 py-3 text-sm text-white/40 text-center">
+      No se encontraron municipios
+    </div>
+  }
+
+</div>

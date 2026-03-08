@@ -9,6 +9,7 @@ import { RegisterRequest } from '../../models/register-request';
   selector: 'app-register-page',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register-page.html',
+  host: { class: 'w-full flex flex-1' },
   styleUrl: './register-page.css',
 })
 export class RegisterPage {
@@ -20,20 +21,20 @@ export class RegisterPage {
 
   registerForm = new FormGroup({
     name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-    ]),
+                                Validators.required,
+                                Validators.minLength(2),
+                                Validators.maxLength(50),
+                              ]),
     surnames: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(100),
-    ]),
+                                    Validators.required,
+                                    Validators.minLength(2),
+                                    Validators.maxLength(100),
+                                  ]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+                                    Validators.required,
+                                    Validators.minLength(6),
+                                  ]),
   });
 
   /**

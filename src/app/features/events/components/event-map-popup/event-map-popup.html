@@ -1,0 +1,82 @@
+
+<div class="w-52 flex flex-col bg-teal-900/90 backdrop-blur-sm rounded-xl
+            overflow-hidden shadow-2xl ring-1 ring-gray-900">
+
+  <!-- Imagen con badges superpuestos -->
+  <div class="relative w-full h-24 bg-gray-800 shrink-0">
+    @if (event().image) {
+      <img
+        [src]="event().image"
+        [alt]="event().name"
+        class="w-full h-full object-cover opacity-90"
+      />
+    } @else {
+      <div class="w-full h-full flex items-center justify-center bg-teal-100">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor"
+             stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5
+               l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 19.5h16.5
+               M12 9.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z"/>
+        </svg>
+      </div>
+    }
+
+    <!-- Badges sobre imagen -->
+    <div class="absolute bottom-0 left-0 right-0
+                flex items-center justify-between
+                px-2 py-1 bg-linear-to-t from-black/60 to-transparent">
+      <span class="text-[10px] italic text-white/80 font-medium truncate max-w-[60%]">
+        {{ event().themeName }}
+      </span>
+      <span class="text-[10px] font-bold px-1.5 py-px rounded-full shrink-0"
+            [class]="event().isFree
+              ? 'bg-emerald-500/90 text-white'
+              : 'bg-amber-500/90 text-white'">
+        {{ event().isFree ? 'Gratis' : event().price + ' €' }}
+      </span>
+    </div>
+  </div>
+
+ 
+  <div class="flex flex-col px-2.5 py-2 gap-0.5">
+
+    <!-- Nombre -->
+    <h3 class="text-white font-bold text-xs leading-snug line-clamp-2">
+      {{ event().name }}
+    </h3>
+
+    <!-- Municipio · Lugar -->
+    <div class="flex items-center gap-1 text-white/50 text-[10px] leading-tight">
+      <svg class="w-2.5 h-2.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <path fill-rule="evenodd"
+          d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041
+             a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.013
+             3.5-4.512 3.5-7.327a8 8 0 10-16 0c0 2.815 1.556 5.314 3.5 7.327
+             a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742z"
+          clip-rule="evenodd"/>
+      </svg>
+      <span class="truncate">{{ event().municipalityName }} · {{ event().placeName }}</span>
+    </div>
+
+    <!--  Resumen del evento -->
+    @if (event().summary) {
+      <p class="text-white/60 text-[10px] leading-snug line-clamp-2 mt-0.5">
+        {{ event().summary }}
+      </p>
+    }
+
+    <!-- Separador -->
+    <div class="border-t border-white/10 mt-1"></div>
+
+    <!-- Saber más -->
+    <a
+      [routerLink]="['/events/detail', this.event().id]"
+      class="text-white hover:text-blue-300 text-[10px] font-semibold
+             text-center mt-0.5 transition-colors duration-150"
+    >
+      Saber más →
+    </a>
+
+  </div>
+</div>

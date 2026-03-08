@@ -9,6 +9,7 @@ import { LoginRequest } from '../../models/login-request';
   selector: 'app-login-page',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login-page.html',
+  host: { class: 'w-full flex flex-1' }, // Para que el div principal ocupe todo el espacio disponible y permita centrar el contenido
   styleUrl: './login-page.css',
 })
 export class LoginPage {
